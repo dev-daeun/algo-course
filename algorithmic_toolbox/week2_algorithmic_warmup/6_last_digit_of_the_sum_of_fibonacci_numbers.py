@@ -6,9 +6,11 @@ def get_fibo_sum(n):
     if n <= 1:
         return n
 
-    pre = 1
+    # the values of F1 and F0 is determined already so that
+    # the first value of sum_ should also be determined as f1 + f0.
+    pre = 0
     cur = 1
-    sum_ = 0
+    sum_ = 1
     for _ in range(1, n):
         pre, cur = cur, pre + cur
         sum_ += cur
