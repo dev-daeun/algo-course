@@ -16,6 +16,8 @@ def get_fibo_sum(n):
         sum_ += cur
     return sum_
 
+
+# time complexity: O(1)
 def fibonacci_sum_last_digit(n):
     remainders = []
     for k in range(1, LAST_DIGIT_CYCLE + 1):

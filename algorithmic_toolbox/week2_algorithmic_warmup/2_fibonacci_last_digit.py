@@ -4,7 +4,8 @@ import sys
 LAST_DIGIT_CYCLE = 60
 
 
-def get_fibonacci_last_digit_naive(n):
+# time complexity: O(1)
+def get_fibonacci_last_digit(n):
     pre = 1
     cur = 1
     last_digits = [1, 1]
@@ -22,4 +23,4 @@ def get_fibonacci_last_digit_naive(n):
 
 if __name__ == '__main__':
     n = int(input())
-    print(get_fibonacci_last_digit_naive(n))
+    print(get_fibonacci_last_digit(n))
