@@ -43,8 +43,8 @@ def optimal_points(segments):
         i = start + 1
         while i < n and segments[i].start - intersected_seg.end <= 0:
             intersected_seg = Segment(
-                start=min(get_set(intersected_seg) & get_set(segments[i])), # time complexity: O(len(get_set(intersected_seg))^2)
-                end=max(get_set(intersected_seg) & get_set(segments[i]))
+                start=min([intersected_seg.end, segments[i].start]),
+                end=intersected_seg.end,
             )
             i += 1
         sub_result.append(intersected_seg)
@@ -53,10 +53,10 @@ def optimal_points(segments):
 
     
 if __name__ == '__main__':
-    # input = sys.stdin.read()
-    # n, *data = map(int, input.split())
-    # segments = list(map(lambda x: Segment(x[0], x[1]), zip(data[::2], data[1::2])))
-    points = optimal_points(dot_input())
+    input = sys.stdin.read()
+    n, *data = map(int, input.split())
+    segments = list(map(lambda x: Segment(x[0], x[1]), zip(data[::2], data[1::2])))
+    points = optimal_points(segments)
     print(len(points))
     for p in points:
         print(p, end=' ')
