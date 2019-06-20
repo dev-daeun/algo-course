@@ -1,4 +1,5 @@
 # Uses python3
+import operator
 import sys
 from collections import namedtuple
 
@@ -18,6 +19,7 @@ def sparse_input():
         Segment(11, 17),
     ]
 
+
 def small_input():
     # expected result: 3
     return [
@@ -27,13 +29,26 @@ def small_input():
     ]
 
 
+def big_input():
+    inputs = []
+    with open('./big_input') as f:
+        while True:
+            line = f.readline()
+            if not line:
+                break
+            nums = line.split()
+            inputs.append(Segment(int(nums[0]), int(nums[1])))
+    return inputs
+
+
 def get_set(seg):
     return {t for t in range(seg.start, seg.end + 1)}
+
 
 # Safe Move: 
 # Find the farthest segment which satisfies intersected area with previous intersected area.
 def optimal_points(segments):
-    segments = sorted(segments, key=lambda s: s.start)
+    segments = sorted(segments, key=operator.itemgetter(0, 1))
     start = 0
     sub_result = []
     n = len(segments)
@@ -43,13 +58,13 @@ def optimal_points(segments):
         i = start + 1
         while i < n and segments[i].start - intersected_seg.end <= 0:
             intersected_seg = Segment(
-                start=min([intersected_seg.end, segments[i].start]),
+                start=segments[i].start,
                 end=intersected_seg.end,
             )
             i += 1
         sub_result.append(intersected_seg)
         start = i
-    return [seg.start for seg in sub_result]    
+    return [seg.start for seg in sub_result]
 
     
 if __name__ == '__main__':
