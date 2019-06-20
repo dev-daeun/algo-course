@@ -46,7 +46,7 @@ def get_set(seg):
 
 
 # Safe Move: 
-# Find the farthest segment which satisfies intersected area with previous intersected area.
+# Find the farthest segment which creates intersected area with previous intersected area.
 def optimal_points(segments):
     segments = sorted(segments, key=operator.itemgetter(0, 1))
     start = 0
