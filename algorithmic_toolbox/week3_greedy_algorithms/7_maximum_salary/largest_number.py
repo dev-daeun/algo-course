@@ -36,10 +36,11 @@ def get_digit(num, i):
 # time complexity: O(NlogN)
 def largest_number(a):
     digit_len = len(str(max(a)))
-    cycled_digits = list(list(itertools.islice(itertools.cycle(str(num)), digit_len)) for num in a)
-    for digit_list in cycled_digits:
-        cycled_digits[cycled_digits.index(digit_list)] = ''.join(digit_list)
-    list_to_sort = list(zip(a, cycled_digits))
+    cycled_digits = [itertools.cycle(str(num)) for num in a]
+    digit_lists = [itertools.islice(gen, digit_len) for gen in cycled_digits]
+    for list_ in digit_lists:
+        digit_lists[digit_lists.index(list_)] = ''.join(list(list_))
+    list_to_sort = list(zip(a, digit_lists))
     sorted_nums = sorted(list_to_sort, key=lambda pair: operator.itemgetter(*range(digit_len))(pair[1]), reverse=True)
     return int(''.join([str(pair[0]) for pair in sorted_nums]))
 
