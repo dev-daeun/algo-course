@@ -30,6 +30,7 @@ def get_min_share(money):
     return money
 
 
+# Time Complexity : O(m)
 def get_change(m):
     answers = [0]
     for idx in range(1, m+1):
