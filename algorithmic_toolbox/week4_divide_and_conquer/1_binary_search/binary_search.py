@@ -1,5 +1,4 @@
 # Uses python3
-import sys
 
 
 def binary_search(array, target):
@@ -19,33 +18,19 @@ def binary_search(array, target):
 SMALL_SORTED_ARRAY = [1, 5, 8, 12, 13, 14]
 SMALL_NUMBERS_TO_SEARCH = [8, 1, 23, 1, 11, 14]
 SMALL_EXPECTED = [2, 0, -1, 0, -1, 5]
+small_answer = []
+for x in SMALL_NUMBERS_TO_SEARCH:
+    element = binary_search(SMALL_SORTED_ARRAY, x)
+    small_answer.append(element)
+
+assert SMALL_EXPECTED == small_answer
 
 BIG_SORTED_ARRAY = [n for n in range(1, 10000)]
 BIG_NUMBERS_TO_SEARCH = [m for m in range(1, 100)]
 BIG_EXPECTED = [e for e in range(99)]
+big_answer = []
+for x in BIG_NUMBERS_TO_SEARCH:
+    element = binary_search(BIG_SORTED_ARRAY, x)
+    big_answer.append(element)
 
-
-if __name__ == '__main__':
-    input_ = sys.stdin.read()
-    data = list(map(int, input_.split()))
-    n = data[0]      # number of sorted array
-    m = data[n+1]    # number of numbers to search
-    sorted_array = data[1:n+1]  # sorted array
-    numbers_to_search = data[n+2:]
-
-    # n = len(SMALL_SORTED_ARRAY)
-    # sorted_array = SMALL_SORTED_ARRAY
-    # numbers_to_search = SMALL_NUMBERS_TO_SEARCH
-
-    # n = len(BIG_SORTED_ARRAY)
-    # sorted_array = BIG_SORTED_ARRAY
-    # numbers_to_search = BIG_NUMBERS_TO_SEARCH
-
-    answer = []
-    for x in numbers_to_search:  # numbers to search
-        element = binary_search(sorted_array, x)
-        print(element, end=' ')
-        answer.append(element)
-
-    expected = SMALL_EXPECTED
-    assert expected == answer
+assert BIG_EXPECTED == big_answer
