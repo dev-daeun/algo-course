@@ -7,6 +7,7 @@ def small_test():
     answer = 9  # 34 = 3 + 3 + 4 + 4 + 4 + 4 + 4 + 4 + 4.
     return input_data, answer
 
+
 def big_test():
     input_data = 1003
     answer = 251  # 1000 = 4 * 250 + 3 * 1
@@ -17,17 +18,6 @@ def edge_test():
     input_data = 1
     answer = 1
     return input_data, answer
-
-
-def get_min_share(money):
-    three_rest = money % 3
-    four_rest = money % 4
-
-    if four_rest == 0:
-        return money // 4
-    if three_rest == 0:
-        return money // 3
-    return money
 
 
 # Time Complexity : O(m)
