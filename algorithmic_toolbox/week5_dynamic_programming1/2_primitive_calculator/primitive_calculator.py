@@ -7,16 +7,16 @@ Time Complexity: O(n)
 
 Solution :
     1. Define 'k' as number between 2 and n. Initialize 'k' to 2.
-    
+
     2. Find the shortest sequence among 'divide_3_seq', 'divide_2_seq', and 'minus_1_seq' which are defined as below:
           * divide_3_seq: optimal sequence of k / 3, which equals to 'sequence[k/2]'.
           * divide_2_seq: optimal sequence of k / 2, which equals to 'sequence[k/3]'.
           * minus_1_seq: optimal sequence of k - 1, which equals to 'sequence[k-1]'.
-          
+
        If k cannot be divided by 2 or 3, each length of sequence[k/2] and sequence[k/3] are transformed to MAX_VALUE.
-       
+
     3. Memorize sequence of k as (the shortest sequence from above + k) and sequence of k becomes optimal.
-    
+
     4. Iterate until k equals n.
 '''
 
