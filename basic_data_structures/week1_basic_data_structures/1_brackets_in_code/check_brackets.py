@@ -3,7 +3,6 @@ from array import array
 from collections import namedtuple
 import os
 
-Bracket = namedtuple("Bracket", ["char", "position"])
 
 def match(left, right):
     return (left + right) in ["()", "[]", "{}"]
@@ -11,13 +10,13 @@ def match(left, right):
 def empty(stack):
     return not bool(stack)
 
-def prior_to_top(left, right):
+def prior_to_current_result(current_result, val):
     opening = '([{'
     closing = ')]}'
 
-    if left in opening and right in closing:
-        return False
-    return True
+    if current_result in opening and val in closing:
+        return True
+    return False
 
 
 def find_mismatch(text):
@@ -40,9 +39,10 @@ def find_mismatch(text):
                 result = None
             continue
 
-        if not prior_to_top(top, val):
+        if prior_to_current_result(text[result], val):            
             result = i
         stack.append(val)
+
 
     if result is not None:
         return result + 1
@@ -50,23 +50,19 @@ def find_mismatch(text):
         return 'Success'
 
 def main():
-    # text = input()
     cur_dir = os.path.dirname(os.path.abspath(__file__))
     test_dir = cur_dir + '/tests/'
     for num in range(1, 55):
         if num < 10:
             num = f'0{num}'
-        input_ = open(test_dir + f'{num}').read().strip('\n')
-        output_ = open(test_dir + f'{num}.a').read().strip('\n')
+        input_ = open(f'{test_dir}{num}').read().strip('\n')
+        output_ = open(f'{test_dir}{num}.a').read().strip('\n')
 
-        print(f'------------- num: {num}')
-        print(f'input: {input_}')
+        print(f'----- test number {num} -----')
         result = find_mismatch(input_)
         print(f'expected: {output_}')
         print(f'result: {result}')
         assert str(result) == output_
-    # mismatch = find_mismatch(text)
-    # Printing answer, write your code here
 
 
 if __name__ == "__main__":
