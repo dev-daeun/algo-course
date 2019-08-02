@@ -9,10 +9,46 @@ class Node(object):
         self.next_ = None
 
 
+class StackForTrackMax(object):
+    def __init__(self):
+        self.tail = None  # points current max 
+
+    @property
+    def empty(self):
+        return not bool(self.tail)
+
+    def iterate(self):
+        p = self.tail
+        while p:
+            print(p.val, end=' ')
+            p = p.prev_
+        print()
+
+    def push(self, node):
+        if self.empty:
+            self.tail = node
+            return None
+        if self.tail.val < node.val:
+            self.tail.next_ = node
+            node.prev_ = self.tail
+            self.tail = node
+
+    def pop(self, node):
+        if self.tail is node:
+            p = self.tail
+            prev = self.tail.prev_
+            if prev:
+                prev.next_ = None
+            self.tail.prev_ = None
+            self.tail = prev
+            return p
+        return None
+
+
 class StackWithMax(object):
     def __init__(self):
         self.tail = None
-        self.max_ = None
+        self.max_tracker = StackForTrackMax()
 
     @property
     def empty(self):
@@ -30,42 +66,25 @@ class StackWithMax(object):
             self.tail.next_ = node
             node.prev_ = self.tail
         self.tail = node
-        self.refresh_max_after_push()
+        self.max_tracker.push(node)
 
     def pop(self):
-        if not self.empty:
-            self.refresh_max_before_pop()
-            prev = self.tail.prev_
+        if self.empty:
+            return None
+        p = self.tail
+        prev = self.tail.prev_
+        if prev:
             prev.next_ = None
-            self.tail.prev_ = None
-            self.tail = prev
-            return None
-        raise Exception()
-    
-    # Time Complexity: O(1)
-    def refresh_max_after_push(self):
-        if not self.max_:
-            self.max_ = self.tail
-            return None 
-        if self.max_.val < self.tail.val:
-            self.max_ = self.tail
-        return None
-
-    # Time Complexity: O(n)
-    def refresh_max_before_pop(self):
-        if not self.max_:
-            return None
-        if self.max_ is self.tail:
-            p = self.tail.prev_
-            self.max_ = Node(-1)
-            while p:
-                if self.max_.val < p.val:
-                    self.max_ = p
-                p = p.prev_
+        self.tail.prev_ = None
+        self.tail = prev
+        self.max_tracker.pop(p)
+        return p
 
     @property
     def max_val(self):
-        return self.max_.val
+        if self.max_tracker.tail:
+            return self.max_tracker.tail.val
+        return None
 
 
 def test1(stack):
@@ -115,20 +134,20 @@ def test4(stack):
     assert stack.max_val == 7
 
 if __name__ == '__main__':
-    stack = StackWithMax()
-    num_queries = int(sys.stdin.readline())
-    for _ in range(num_queries):
-        query = sys.stdin.readline().split()
+    # stack = StackWithMax()
+    # num_queries = int(sys.stdin.readline())
+    # for _ in range(num_queries):
+    #     query = sys.stdin.readline().split()
 
-        if query[0] == "push":
-            stack.push(Node(int(query[1])))
-        elif query[0] == "pop":
-            stack.pop()
-        elif query[0] == "max":
-            print(stack.max_val)
-        else:
-            assert(0)
-    # test1(StackWithMax())
-    # test2(StackWithMax())
-    # test3(StackWithMax())
-    # test4(StackWithMax())
+    #     if query[0] == "push":
+    #         stack.push(Node(int(query[1])))
+    #     elif query[0] == "pop":
+    #         stack.pop()
+    #     elif query[0] == "max":
+    #         print(stack.max_val)
+    #     else:
+    #         assert(0)
+    test1(StackWithMax())
+    test2(StackWithMax())
+    test3(StackWithMax())
+    test4(StackWithMax())
