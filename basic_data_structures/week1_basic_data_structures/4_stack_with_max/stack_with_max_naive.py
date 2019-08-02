@@ -25,16 +25,17 @@ class StackForTrackMax(object):
         print()
 
     def push(self, node):
+        new_node = Node(node.val)
         if self.empty:
-            self.tail = node
+            self.tail = new_node
             return None
-        if self.tail.val < node.val:
-            self.tail.next_ = node
-            node.prev_ = self.tail
-            self.tail = node
+        if self.tail.val <= new_node.val:
+            self.tail.next_ = new_node
+            new_node.prev_ = self.tail
+            self.tail = new_node
 
     def pop(self, node):
-        if self.tail is node:
+        if self.tail.val == node.val:
             p = self.tail
             prev = self.tail.prev_
             if prev:
