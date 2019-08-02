@@ -17,13 +17,6 @@ class StackForTrackMax(object):
     def empty(self):
         return not bool(self.tail)
 
-    def iterate(self):
-        p = self.tail
-        while p:
-            print(p.val, end=' ')
-            p = p.prev_
-        print()
-
     def push(self, node):
         new_node = Node(node.val)
         if self.empty:
@@ -54,13 +47,6 @@ class StackWithMax(object):
     @property
     def empty(self):
         return not bool(self.tail)
-
-    def iterate(self):
-        p = self.tail
-        while p:
-            print(p.val, end=' ')
-            p = p.prev_
-        print()
 
     def push(self, node):
         if not self.empty:
