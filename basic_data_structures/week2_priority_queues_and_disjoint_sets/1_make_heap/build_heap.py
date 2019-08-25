@@ -28,9 +28,15 @@ class MinHeap(object):
         except IndexError:
             return None, MAX_VALUE + 1
 
+    def is_leaf(self, i):
+        left_idx, _ = self.left(i)
+        right_idx, _ = self.right(i)
+
+        return not (left_idx or right_idx)
+
     def sift_down(self, i):
         parent = i
-        while True:
+        while not self.is_leaf(parent):
             left_idx, left = self.left(parent)
             right_idx, right = self.right(parent)
             smallest = min(self.data[parent], left, right)
@@ -83,5 +89,5 @@ def main():
 
 
 if __name__ == "__main__":
-    test()
-    # main()
+    # test()
+    main()
