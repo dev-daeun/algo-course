@@ -16,11 +16,11 @@ class Database:
         if first_root == second_root:
             return self.max_row_count
 
-        if self.ranks[first] > self.ranks[second]:
+        if self.ranks[first_root] > self.ranks[second_root]:
             return self.merge(dst=first_root, src=second_root)
 
-        if self.ranks[first] == self.ranks[second]:
-            self.ranks[first] += 1
+        if self.ranks[first_root] == self.ranks[second_root]:
+            self.ranks[second_root] += 1
 
         return self.merge(dst=second_root, src=first_root)
 
