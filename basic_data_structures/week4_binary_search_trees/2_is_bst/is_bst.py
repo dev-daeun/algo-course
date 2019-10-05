@@ -139,6 +139,10 @@ def is_bst(root):
 def main():
     nodes = int(sys.stdin.readline().strip())
 
+    if not nodes:
+        print("CORRECT")
+        return
+
     tree = []
     for i in range(nodes):
         tree.append(list(map(int, sys.stdin.readline().strip().split())))
