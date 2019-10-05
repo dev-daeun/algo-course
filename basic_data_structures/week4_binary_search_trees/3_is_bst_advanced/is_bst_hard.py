@@ -148,11 +148,15 @@ def is_bst(root):
 def main():
     nodes = int(sys.stdin.readline().strip())
 
-    tree = []
+    data = []
     for i in range(nodes):
-        tree.append(list(map(int, sys.stdin.readline().strip().split())))
+        data.append(list(map(int, sys.stdin.readline().strip().split())))
 
-    root = build_tree(tree)
+    if not data:
+        print("CORRECT")
+        return
+
+    root = build_tree(data)
     if is_bst(root):
         print("CORRECT")
     else:
