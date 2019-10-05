@@ -101,41 +101,58 @@ def is_leaf(root):
     return not root.left and not root.right
 
 
+def find_biggest_in_left(root):
+    start = root.left
+    if not start:
+        return root.key
+    while start.right:
+        start = start.right
+    return start.key
+
+
+def find_smallest_in_right(root):
+    start = root.right
+    if not start:
+        return root.key
+    while start.left:
+        start = start.left
+    return start.key
+
+
 def is_bst(root):
-    if not root:
+    if is_leaf(root):
         return True
 
-    if not is_bst(root.left):
-        return False
-
-    if not is_bst(root.right):
-        return False
-
     if root.left:
-        if root.left.key > root.key:
+        is_left_bst = is_bst(root.left)
+        if not is_left_bst or find_biggest_in_left(root) > root.key:
             return False
 
     if root.right:
-        if root.right.key < root.key:
+        is_right_bst = is_bst(root.right)
+        if not is_right_bst or find_smallest_in_right(root) < root.key:
             return False
 
     return True
 
 
 def main():
-    # nodes = int(sys.stdin.readline().strip())
-    # tree = []
-    # for i in range(nodes):
-    #     tree.append(list(map(int, sys.stdin.readline().strip().split())))
-    # if is_bst(tree):
-    #     print("CORRECT")
-    # else:
-    #     print("INCORRECT")
+    nodes = int(sys.stdin.readline().strip())
+
+    tree = []
+    for i in range(nodes):
+        tree.append(list(map(int, sys.stdin.readline().strip().split())))
+
+    root = build_tree(tree)
+    if is_bst(root):
+        print("CORRECT")
+    else:
+        print("INCORRECT")
     # test1()
     # test2()
     # test3()
     # test4()
-    test5()
+    # test5()
 
 
 threading.Thread(target=main).start()
