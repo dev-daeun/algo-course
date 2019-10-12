@@ -22,18 +22,21 @@ def left_rotate(root):
   y = root.right
   root.right = y.left
   y.left = root
-  y.parent = None
+
+  y.parent = root.parent
   root.parent = y
+
   update_sum(root)
   update_sum(y)
-
 
 def right_rotate(root):
   y = root.left
   root.left = y.right
   y.right = root
-  y.parent = None
+
+  y.parent = root.parent
   root.parent = y
+
   update_sum(root)
   update_sum(y)
 
@@ -48,15 +51,41 @@ def update(v):
 
 # Makes splay of the given vertex and makes
 # it the new root.
-def splay(v):
-  if v == None:
-    return None
-  while v.parent != None:
-    if v.parent.parent == None:
-      smallRotation(v)
-      break
-    bigRotation(v)
-  return v
+
+def is_root(node):
+  return not node.parent
+
+
+def splay(node):
+  if is_root(node):
+    return node
+
+  parent = node.parent
+  grandparent = parent.parent
+
+  if grandparent:
+    if grandparent.key > parent.key > node.key:  # left-left
+      right_rotate(parent)
+      right_rotate(grandparent)
+    if grandparent.key < parent.key < node.key:  # right-right
+      left_rotate(parent)
+      left_rotate(grandparent)
+    if grandparent.key < parent.key > node.key:  # right-left
+      right_rotate(parent)
+      left_rotate(grandparent)
+    if grandparent.key > parent.key < node.key: # left-right
+      left_rotate(parent)
+      right_rotate(grandparent)
+  else:
+    if node.parent.key < node.key:
+      left_rotate(parent)
+    if node.parent.key > node.key:
+      right_rotate(parent)
+
+  if not is_root(node):
+    splay(node)
+
+  return node
 
 
 def binary_search(root, x):
