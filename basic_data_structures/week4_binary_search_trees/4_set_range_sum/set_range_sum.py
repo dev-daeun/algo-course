@@ -149,12 +149,13 @@ def insert(root, x):
   return splay(new_node)
 
 
-def erase(x): 
-  global root
-  # Implement erase yourself
-  pass
+def delete(root, x):
+  result = find(root, x)
+  splay(result)
+  if result.key == x:
+    merge(result.left, result.right)
 
-  
+
 def sum(fr, to): 
   global root
   (left, middle) = split(root, fr)
@@ -173,7 +174,7 @@ for i in range(n):
     insert((x + last_sum_result) % MODULO)
   elif line[0] == '-':
     x = int(line[1])
-    erase((x + last_sum_result) % MODULO)
+    delete((x + last_sum_result) % MODULO)
   elif line[0] == '?':
     x = int(line[1])
     print('Found' if find((x + last_sum_result) % MODULO) else 'Not found')
