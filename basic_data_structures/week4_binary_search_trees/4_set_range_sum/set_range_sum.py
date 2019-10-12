@@ -2,7 +2,9 @@
 
 from sys import stdin
 
-# Splay tree implementation
+
+MODULO = 1000000001
+
 
 # Vertex of a splay tree
 class Vertex:
@@ -54,30 +56,26 @@ def splay(v):
     bigRotation(v)
   return v
 
-# Searches for the given key in the tree with the given root
-# and calls splay for the deepest visited node after that.
-# Returns pair of the result and the new root.
-# If found, result is a pointer to the node with the given key.
-# Otherwise, result is a pointer to the node with the smallest
-# bigger key (next value in the order).
-# If the key is bigger than all keys in the tree,
-# then result is None.
+
+def binary_search(root, x):
+  while root:
+    if root.key < x:
+      root = root.right
+      continue
+    if root.key > x:
+      root = root.left
+      continue
+    return root
+  return root.parent
+
+
 def find(root, key): 
-  v = root
-  last = root
-  next = None
-  while v != None:
-    if v.key >= key and (next == None or v.key < next.key):
-      next = v    
-    last = v
-    if v.key == key:
-      break    
-    if v.key < key:
-      v = v.right
-    else: 
-      v = v.left      
-  root = splay(last)
-  return (next, root)
+  result = binary_search(root, key)
+  splay(result)
+  if result.key == key:
+    return True
+  return False
+
 
 def split(root, key):  
   (result, root) = find(root, key)  
@@ -123,11 +121,6 @@ def erase(x):
   # Implement erase yourself
   pass
 
-def search(x): 
-  global root
-  # Implement find yourself
-  
-  return False
   
 def sum(fr, to): 
   global root
@@ -138,7 +131,6 @@ def sum(fr, to):
 
   return ans
 
-MODULO = 1000000001
 n = int(stdin.readline())
 last_sum_result = 0
 for i in range(n):
@@ -151,7 +143,7 @@ for i in range(n):
     erase((x + last_sum_result) % MODULO)
   elif line[0] == '?':
     x = int(line[1])
-    print('Found' if search((x + last_sum_result) % MODULO) else 'Not found')
+    print('Found' if find((x + last_sum_result) % MODULO) else 'Not found')
   elif line[0] == 's':
     l = int(line[1])
     r = int(line[2])
