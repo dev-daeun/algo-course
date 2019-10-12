@@ -1,9 +1,5 @@
 # python3
-
 from sys import stdin
-
-
-MODULO = 1000000001
 
 
 # Vertex of a splay tree
@@ -11,34 +7,6 @@ class Vertex:
   def __init__(self, key, sum, left, right, parent):
     (self.key, self.sum, self.left, self.right, self.parent) = (key, sum, left, right, parent)
 
-
-def update_sum(root):
-  left_sum = root.left.sum if root.left else 0
-  right_sum = root.right.sum if root.right else 0
-  root.sum = left_sum + right_sum + root.val
-
-
-def left_rotate(root):
-  y = root.right
-  root.right = y.left
-  y.left = root
-
-  y.parent = root.parent
-  root.parent = y
-
-  update_sum(root)
-  update_sum(y)
-
-def right_rotate(root):
-  y = root.left
-  root.left = y.right
-  y.right = root
-
-  y.parent = root.parent
-  root.parent = y
-
-  update_sum(root)
-  update_sum(y)
 
 def update(v):
   if v == None:
@@ -49,8 +17,29 @@ def update(v):
   if v.right != None:
     v.right.parent = v
 
-# Makes splay of the given vertex and makes
-# it the new root.
+
+def left_rotate(root):
+  y = root.right
+  root.right = y.left
+  y.left = root
+
+  y.parent = root.parent
+  root.parent = y
+
+  update(root)
+  update(y)
+
+def right_rotate(root):
+  y = root.left
+  root.left = y.right
+  y.right = root
+
+  y.parent = root.parent
+  root.parent = y
+
+  update(root)
+  update(y)
+
 
 def is_root(node):
   return not node.parent
@@ -140,10 +129,10 @@ def insert(root, x):
   new_node = Vertex(key=x, sum=x, left=None, right=None, parent=parent)
   if parent.key > x:
     parent.left = new_node
-    update_sum(parent)
+    update(parent)
   else if parent.key < x:
     parent.right = new_node
-    update_sum(parent)
+    update(parent)
   else:
     return splay(parent)
   return splay(new_node)
@@ -162,9 +151,10 @@ def sum(fr, to):
   (middle, right) = split(middle, to + 1)
   ans = 0
   # Complete the implementation of sum
-
   return ans
 
+
+MODULO = 1000000001
 n = int(stdin.readline())
 last_sum_result = 0
 for i in range(n):
