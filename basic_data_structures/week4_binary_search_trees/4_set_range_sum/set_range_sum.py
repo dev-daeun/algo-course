@@ -9,6 +9,30 @@ class Vertex:
   def __init__(self, key, sum, left, right, parent):
     (self.key, self.sum, self.left, self.right, self.parent) = (key, sum, left, right, parent)
 
+
+def update_sum(root):
+  root.sum = root.left.sum + root.right.sum + root.val
+
+
+def left_rotate(root):
+  y = root.right
+  root.right = y.left
+  y.left = root
+  y.parent = None
+  root.parent = y
+  update_sum(root)
+  update_sum(y)
+
+
+def right_rotate(root):
+  y = root.left
+  root.left = y.right
+  y.right = root
+  y.parent = None
+  root.parent = y
+  update_sum(root)
+  update_sum(y)
+
 def update(v):
   if v == None:
     return
@@ -17,42 +41,6 @@ def update(v):
     v.left.parent = v
   if v.right != None:
     v.right.parent = v
-
-def smallRotation(v):
-  parent = v.parent
-  if parent == None:
-    return
-  grandparent = v.parent.parent
-  if parent.left == v:
-    m = v.right
-    v.right = parent
-    parent.left = m
-  else:
-    m = v.left
-    v.left = parent
-    parent.right = m
-  update(parent)
-  update(v)
-  v.parent = grandparent
-  if grandparent != None:
-    if grandparent.left == parent:
-      grandparent.left = v
-    else: 
-      grandparent.right = v
-
-def bigRotation(v):
-  if v.parent.left == v and v.parent.parent.left == v.parent:
-    # Zig-zig
-    smallRotation(v.parent)
-    smallRotation(v)
-  elif v.parent.right == v and v.parent.parent.right == v.parent:
-    # Zig-zig
-    smallRotation(v.parent)
-    smallRotation(v)    
-  else: 
-    # Zig-zag
-    smallRotation(v)
-    smallRotation(v)
 
 # Makes splay of the given vertex and makes
 # it the new root.
