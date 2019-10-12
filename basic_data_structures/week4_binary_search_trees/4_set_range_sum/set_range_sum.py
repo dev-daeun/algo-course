@@ -13,7 +13,9 @@ class Vertex:
 
 
 def update_sum(root):
-  root.sum = root.left.sum + root.right.sum + root.val
+  left_sum = root.left.sum if root.left else 0
+  right_sum = root.right.sum if root.right else 0
+  root.sum = left_sum + right_sum + root.val
 
 
 def left_rotate(root):
@@ -104,18 +106,20 @@ def merge(left, right):
   return right
 
   
-# Code that uses splay tree to solve the problem
-                                    
-root = None
+def insert(root, x):
+  parent = find(root, x)
+  new_node = Vertex(key=x, sum=x, left=None, right=None, parent=parent)
+  if parent.key > x:
+    parent.left = new_node
+    update_sum(parent)
+  else if parent.key < x:
+    parent.right = new_node
+    update_sum(parent)
+  else:
+    return splay(parent)
+  return splay(new_node)
 
-def insert(x):
-  global root
-  (left, right) = split(root, x)
-  new_vertex = None
-  if right == None or right.key != x:
-    new_vertex = Vertex(x, x, None, None, None)  
-  root = merge(merge(left, new_vertex), right)
-  
+
 def erase(x): 
   global root
   # Implement erase yourself
