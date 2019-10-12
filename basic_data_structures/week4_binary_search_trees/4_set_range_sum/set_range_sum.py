@@ -145,14 +145,38 @@ def delete(root, x):
     merge(result.left, result.right)
 
 
-def sum(fr, to): 
-  global root
-  (left, middle) = split(root, fr)
-  (middle, right) = split(middle, to + 1)
-  ans = 0
-  # Complete the implementation of sum
-  return ans
+def split_left(root):
+  subtree_to_split = root.left
+  subtree_to_split.parent = None
+  root.sum -= subtree_to_split.sum
+  root.left = None
+  return subtree_to_split, root
 
+
+def split_right(root):
+  subtree_to_split = root.right
+  subtree_to_split.parent = None
+  root.sum -= subtree_to_split.sum
+  root.right = None
+  return subtree_to_split, root
+
+
+def range_sum(root, fr, to):
+  fr_node = binary_search(root, fr)
+  if fr_node.key != fr:
+    return None
+  splay(fr_node)
+  dumped_left, splayed_root = split_left(fr_node)
+
+  to_node = binary_search(splayed_root, to)
+  if to_node.key != to:
+    return None
+  splay(to_node)
+  dumped_right, splayed_root2 = split_right(to_node)
+  result = splayed_root2.sum
+  merged = merge(dumped_left, splayed_root2)
+  merge(merged, dumped_right)
+  return result
 
 MODULO = 1000000001
 n = int(stdin.readline())
@@ -171,6 +195,6 @@ for i in range(n):
   elif line[0] == 's':
     l = int(line[1])
     r = int(line[2])
-    res = sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO)
+    res = range_sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO)
     print(res)
     last_sum_result = res % MODULO
