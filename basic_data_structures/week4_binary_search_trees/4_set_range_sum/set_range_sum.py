@@ -82,18 +82,18 @@ class SplayTree:
 
   @staticmethod
   def binary_search(root, key):
-    while root:
+    while True:
+      if root.key == key:
+        return root
+      if not (root.left or root.right):
+        return root
       if root.key < key:
         root = root.right
-        continue
       if root.key > key:
         root = root.left
-        continue
-      return root
-    return root.parent
 
   def find(self, key):
-    if not root:
+    if not self.root:
       return False
     
     result = self.binary_search(self.root, key)
