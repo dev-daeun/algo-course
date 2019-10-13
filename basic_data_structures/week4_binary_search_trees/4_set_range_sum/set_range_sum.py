@@ -70,14 +70,15 @@ class SplayTree:
         self.left_rotate(parent)
         self.right_rotate(grandparent)
     else:
-      if node.parent.key < node.key:
+      if parent.key < node.key:
         self.left_rotate(parent)
-      if node.parent.key > node.key:
+      if parent.key > node.key:
         self.right_rotate(parent)
 
     if not node.is_root():
       self.splay(node)
 
+    self.root = node
     return node
 
   @staticmethod
