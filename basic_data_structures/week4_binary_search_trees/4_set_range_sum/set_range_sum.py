@@ -172,25 +172,23 @@ class SplayTree:
     subtree_to_split.parent = None
     node.sum -= subtree_to_split.sum
     node.right = None
-    return subtree_to_split, node
+    return node, subtree_to_split
 
-  def range_sum(self, root, fr, to):
-    fr_node = self.binary_search(root, fr)
+  def range_sum(self, fr, to):
+    fr_node = self.binary_search(self.root, fr)
     if fr_node.key != fr:
       return None
-    
     root_to_split = self.splay(fr_node)
-    dumped_left, splayed_root = self.split_left(root_to_split)
+    dumped_left, splayed_fr = self.split_left(root_to_split)
 
-    to_node = self.binary_search(splayed_root, to)
+    to_node = self.binary_search(splayed_fr, to)
     if to_node.key != to:
       return None
-    
     root_to_split = self.splay(to_node)
-    dumped_right, splayed_root2 = self.split_right(root_to_split)
-    result = splayed_root2.sum
-    merged = self.merge(dumped_left, splayed_root2)
-    self.merge(merged, dumped_right)
+    splayed_to, dumped_right = self.split_right(root_to_split)
+
+    result = splayed_to.sum
+    self.merge(dumped_left, self.merge(splayed_to, dumped_right))
     return result
 
 
@@ -198,12 +196,11 @@ def test(i):
   n, *data = open(f'./tests/{i}').readlines()
   result = []
   spt = SplayTree()
+  last_sum_result = 0
 
   for d in data:
     op, num = d.split()
-    last_sum_result = 0
     input_ = (int(num) + last_sum_result) % MODULO
-
     if op == '+':
       spt.insert(input_)
     if op == '-':
@@ -214,7 +211,8 @@ def test(i):
       fr, to = list(map(lambda x: int(x), num.split()))
       fr = (fr + last_sum_result) % MODULO
       to = (fr + last_sum_result) % MODULO
-      result.append(spt.range_sum((fr , to)))
+      last_sum_result = sp.range_sum(fr, to)
+      result.append(last_sum_result)
 
   output = open(f'./tests/{i}.a').readlines()
   result = [str(r) for r in result]
