@@ -162,12 +162,13 @@ class SplayTree:
     if parent.key > key:
       parent.left = new_node
       parent.update()
+      self.splay(parent.left)
     elif parent.key < key:
       parent.right = new_node
       parent.update()
+      self.splay(parent.right)
     else:
-      return self.splay(parent)
-    return self.splay(new_node)
+      self.splay(parent)
 
   def delete(self, key):
     if not self.root:
@@ -195,6 +196,12 @@ class SplayTree:
       node.right = None
     return node, subtree_to_split
 
+  def traverse(self, root):
+    if root:
+      self.traverse(root.left)
+      print(root.key)
+      self.traverse(root.right)
+
   def range_sum(self, fr, to):
     if not self.root:
       return 0
@@ -220,7 +227,7 @@ def test(i):
 
   for d in data:
     op, *num = d.split()
-    print(d)
+    # print(d)
     if len(num) == 1:
       num = (int(num[0]) + last_sum_result) % MODULO
     else:
@@ -238,7 +245,7 @@ def test(i):
   output = open(f'./tests/{i}.a').readlines()
   output = [o.split('\n')[0] for o in output]
   result = [str(r) for r in result]
-  print(output)
+  # print(output)
   print(result)
   assert result == output
 
@@ -248,21 +255,22 @@ if __name__ == '__main__':
     print(i)
     test(i)
   # n = int(stdin.readline())
+  # spt = SplayTree()
   # last_sum_result = 0
   # for i in range(n):
   #   line = stdin.readline().split()
   #   if line[0] == '+':
   #     x = int(line[1])
-  #     insert((x + last_sum_result) % MODULO)
+  #     spt.insert((x + last_sum_result) % MODULO)
   #   elif line[0] == '-':
   #     x = int(line[1])
-  #     delete((x + last_sum_result) % MODULO)
+  #     spt.delete((x + last_sum_result) % MODULO)
   #   elif line[0] == '?':
   #     x = int(line[1])
-  #     print('Found' if find((x + last_sum_result) % MODULO) else 'Not found')
+  #     print('Found' if spt.find((x + last_sum_result) % MODULO) else 'Not found')
   #   elif line[0] == 's':
   #     l = int(line[1])
   #     r = int(line[2])
-  #     res = range_sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO)
+  #     res = spt.range_sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO)
   #     print(res)
   #     last_sum_result = res % MODULO
