@@ -92,11 +92,11 @@ class SplayTree:
       return root
     return root.parent
 
-  def find(self, root, key):
+  def find(self, key):
     if not root:
       return False
     
-    result = self.binary_search(root, key)
+    result = self.binary_search(self.root, key)
     self.splay(result)
     
     if result.key != key:
