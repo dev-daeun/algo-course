@@ -154,9 +154,9 @@ class SplayTree:
     if not self.root:
       return
     result = self.binary_search(self.root, key)
-    self.splay(result)
-    if result.key == key:
-      self.merge(result.left, result.right)
+    splayed_result = self.splay(result)
+    if splayed.key == key:
+      self.merge(splayed_result.left, splayed_result.right)
 
   @staticmethod
   def split_left(node):
