@@ -18,6 +18,9 @@ class Vertex:
 
   def is_root(self):
     return not self.parent
+  
+  def is_leaf(self):
+    return not (self.left or self.right)
 
 
 class SplayTree:
@@ -90,18 +93,22 @@ class SplayTree:
           return splayed
 
   @staticmethod
-  def binary_search(root, key):
-    while True:
-      if not (root.left or root.right) or root.key == key:
+  def is_leaf(root):
+    return not (root.left or root.right)
+
+  def binary_search(self, root, key):
+    if root.key == key:
+      return root
+    
+    if root.key > key:
+      if not root.left:
         return root
-      if root.key < key:
-        if not root.right:
-          return root
-        root = root.right
-      if root.key > key:
-        if not root.left:
-          return root
-        root = root.left
+      return self.binary_search(root.left, key)
+    
+    if root.key < key:
+      if not root.right:
+        return root
+      return self.binary_search(root.right, key)
 
   def find(self, key):
     if not self.root:
@@ -173,29 +180,30 @@ class SplayTree:
   @staticmethod
   def split_left(node):
     subtree_to_split = node.left
-    subtree_to_split.parent = None
-    node.sum -= subtree_to_split.sum
-    node.left = None
+    if subtree_to_split:
+      subtree_to_split.parent = None
+      node.sum -= subtree_to_split.sum
+      node.left = None
     return subtree_to_split, node
 
   @staticmethod
   def split_right(node):
     subtree_to_split = node.right
-    subtree_to_split.parent = None
-    node.sum -= subtree_to_split.sum
-    node.right = None
+    if subtree_to_split:
+      subtree_to_split.parent = None
+      node.sum -= subtree_to_split.sum
+      node.right = None
     return node, subtree_to_split
 
   def range_sum(self, fr, to):
+    if not self.root:
+      return 0
+
     fr_node = self.binary_search(self.root, fr)
-    if fr_node.key != fr:
-      return None
     root_to_split = self.splay(fr_node)
     dumped_left, splayed_fr = self.split_left(root_to_split)
 
     to_node = self.binary_search(splayed_fr, to)
-    if to_node.key != to:
-      return None
     root_to_split = self.splay(to_node)
     splayed_to, dumped_right = self.split_right(root_to_split)
 
@@ -212,6 +220,7 @@ def test(i):
 
   for d in data:
     op, *num = d.split()
+    print(d)
     if len(num) == 1:
       num = (int(num[0]) + last_sum_result) % MODULO
     else:
@@ -229,6 +238,8 @@ def test(i):
   output = open(f'./tests/{i}.a').readlines()
   output = [o.split('\n')[0] for o in output]
   result = [str(r) for r in result]
+  print(output)
+  print(result)
   assert result == output
 
 
