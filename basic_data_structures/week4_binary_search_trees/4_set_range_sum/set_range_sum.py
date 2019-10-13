@@ -22,6 +22,9 @@ class Vertex:
 
 class SplayTree:
 
+  def __init__(self):
+    self.root = None
+
   @staticmethod
   def left_rotate(node):
     y = node.right
@@ -130,9 +133,13 @@ class SplayTree:
     right.update()
     return right
   
-  def insert(self, root, key):
-    parent = self.binary_search(root, key)
-    new_node = Vertex(key=x, sum=x, left=None, right=None, parent=parent)
+  def insert(self, key):
+    new_node = Vertex(key=x, sum=x, left=None, right=None, parent=None)
+    if not self.root:
+      self.root = new_node
+      return
+
+    parent = self.binary_search(self.root, key)
     if parent.key > x:
       parent.left = new_node
       parent.update()
@@ -143,8 +150,10 @@ class SplayTree:
       return self.splay(parent)
     return self.splay(new_node)
 
-  def delete(self, root, key):
-    result = self.binary_search(root, key)
+  def delete(self, key):
+    if not self.root:
+      return
+    result = self.binary_search(self.root, key)
     self.splay(result)
     if result.key == key:
       self.merge(result.left, result.right)
