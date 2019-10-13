@@ -132,7 +132,7 @@ def insert(root, x):
   if parent.key > x:
     parent.left = new_node
     update(parent)
-  else if parent.key < x:
+  elif parent.key < x:
     parent.right = new_node
     update(parent)
   else:
@@ -182,14 +182,14 @@ def range_sum(root, fr, to):
 
 
 def test(i):
-  n, data* = open(f'./tests/{i}').readlines()
+  n, *data = open(f'./tests/{i}').readlines()
   result = []
 
   for d in data:
     op, num = d.split()
-    last_sum = 0
+    last_sum_result = 0
     input_ = (int(num) + last_sum_result) % MODULO
-  
+
     if op == '+':
       insert(input_)
     if op == '-':
@@ -200,30 +200,31 @@ def test(i):
       fr, to = list(map(lambda x: int(x), num.split()))
       fr = (fr + last_sum_result) % MODULO
       to = (fr + last_sum_result) % MODULO
-      result.append(range_sum((fr , to))
+      result.append(range_sum((fr , to)))
 
-  output* = open(f'./tests/{i}.a').readlines()
+  output = open(f'./tests/{i}.a').readlines()
   result = [str(r) for r in result]
   assert result == output
 
 
 if __name__ == '__main__':
-  n = int(stdin.readline())
-  last_sum_result = 0
-  for i in range(n):
-    line = stdin.readline().split()
-    if line[0] == '+':
-      x = int(line[1])
-      insert((x + last_sum_result) % MODULO)
-    elif line[0] == '-':
-      x = int(line[1])
-      delete((x + last_sum_result) % MODULO)
-    elif line[0] == '?':
-      x = int(line[1])
-      print('Found' if find((x + last_sum_result) % MODULO) else 'Not found')
-    elif line[0] == 's':
-      l = int(line[1])
-      r = int(line[2])
-      res = range_sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO)
-      print(res)
-      last_sum_result = res % MODULO
+  test(2)
+  # n = int(stdin.readline())
+  # last_sum_result = 0
+  # for i in range(n):
+  #   line = stdin.readline().split()
+  #   if line[0] == '+':
+  #     x = int(line[1])
+  #     insert((x + last_sum_result) % MODULO)
+  #   elif line[0] == '-':
+  #     x = int(line[1])
+  #     delete((x + last_sum_result) % MODULO)
+  #   elif line[0] == '?':
+  #     x = int(line[1])
+  #     print('Found' if find((x + last_sum_result) % MODULO) else 'Not found')
+  #   elif line[0] == 's':
+  #     l = int(line[1])
+  #     r = int(line[2])
+  #     res = range_sum((l + last_sum_result) % MODULO, (r + last_sum_result) % MODULO)
+  #     print(res)
+  #     last_sum_result = res % MODULO
