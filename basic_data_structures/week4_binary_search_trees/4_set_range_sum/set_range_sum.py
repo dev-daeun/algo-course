@@ -9,181 +9,186 @@ class Vertex:
   def __init__(self, key, sum, left, right, parent):
     (self.key, self.sum, self.left, self.right, self.parent) = (key, sum, left, right, parent)
 
+  def update(self):
+    self.sum = self.key + (self.left.sum if self.left != None else 0) + (self.right.sum if self.right != None else 0)
+    if self.left != None:
+      self.left.parent = self
+    if self.right != None:
+      self.right.parent = self
 
-def update(v):
-  if v == None:
-    return
-  v.sum = v.key + (v.left.sum if v.left != None else 0) + (v.right.sum if v.right != None else 0)
-  if v.left != None:
-    v.left.parent = v
-  if v.right != None:
-    v.right.parent = v
-
-
-def left_rotate(root):
-  y = root.right
-  root.right = y.left
-  y.left = root
-
-  y.parent = root.parent
-  root.parent = y
-
-  update(root)
-  update(y)
-
-def right_rotate(root):
-  y = root.left
-  root.left = y.right
-  y.right = root
-
-  y.parent = root.parent
-  root.parent = y
-
-  update(root)
-  update(y)
+  def is_root(self):
+    return not self.parent
 
 
-def is_root(node):
-  return not node.parent
+class SplayTree:
 
+  @staticmethod
+  def left_rotate(node):
+    y = node.right
+    node.right = y.left
+    y.left = node
 
-def splay(node):
-  if is_root(node):
+    y.parent = node.parent
+    node.parent = y
+
+    node.update()
+    y.update()
+
+  @staticmethod
+  def right_rotate(node):
+    y = node.left
+    node.left = y.right
+    y.right = node
+
+    y.parent = node.parent
+    node.parent = y
+
+    node.update()
+    y.update() 
+
+  def splay(self, node):
+    if node.is_root():
+      return node
+    
+    parent = node.parent
+    grandparent = parent.parent
+
+    if grandparent:
+      if grandparent.key > parent.key > node.key:  # left-left
+        self.right_rotate(parent)
+        self.right_rotate(grandparent)
+      if grandparent.key < parent.key < node.key:  # right-right
+        self.left_rotate(parent)
+        self.left_rotate(grandparent)
+      if grandparent.key < parent.key > node.key:  # right-left
+        self.right_rotate(parent)
+        self.left_rotate(grandparent)
+      if grandparent.key > parent.key < node.key: # left-right
+        self.left_rotate(parent)
+        self.right_rotate(grandparent)
+    else:
+      if node.parent.key < node.key:
+        self.left_rotate(parent)
+      if node.parent.key > node.key:
+        self.right_rotate(parent)
+
+    if not node.is_root():
+      self.splay(node)
+
     return node
 
-  parent = node.parent
-  grandparent = parent.parent
+  @staticmethod
+  def binary_search(root, key):
+    while root:
+      if root.key < key:
+        root = root.right
+        continue
+      if root.key > key:
+        root = root.left
+        continue
+      return root
+    return root.parent
 
-  if grandparent:
-    if grandparent.key > parent.key > node.key:  # left-left
-      right_rotate(parent)
-      right_rotate(grandparent)
-    if grandparent.key < parent.key < node.key:  # right-right
-      left_rotate(parent)
-      left_rotate(grandparent)
-    if grandparent.key < parent.key > node.key:  # right-left
-      right_rotate(parent)
-      left_rotate(grandparent)
-    if grandparent.key > parent.key < node.key: # left-right
-      left_rotate(parent)
-      right_rotate(grandparent)
-  else:
-    if node.parent.key < node.key:
-      left_rotate(parent)
-    if node.parent.key > node.key:
-      right_rotate(parent)
-
-  if not is_root(node):
-    splay(node)
-
-  return node
-
-
-def binary_search(root, x):
-  while root:
-    if root.key < x:
-      root = root.right
-      continue
-    if root.key > x:
-      root = root.left
-      continue
-    return root
-  return root.parent
-
-
-def find(root, key): 
-  result = binary_search(root, key)
-  splay(result)
-  if result.key == key:
+  def find(self, root, key):
+    if not root:
+      return False
+    
+    result = self.binary_search(root, key)
+    self.splay(result)
+    
+    if result.key != key:
+      return False
     return True
-  return False
 
+  def split(self, root, key):
+    result = self.binary_search(root, key)
+    if result.key != key:
+      return root, None
+    
+    right = self.splay(result)
+    left = right.left
+    right.left = None
 
-def split(root, key):  
-  (result, root) = find(root, key)  
-  if result == None:    
-    return (root, None)  
-  right = splay(result)
-  left = right.left
-  right.left = None
-  if left != None:
-    left.parent = None
-  update(left)
-  update(right)
-  return (left, right)
+    if left != None:
+      left.parent = None
 
-  
-def merge(left, right):
-  if left == None:
+    left.update()
+    right.update()
+    return left, right
+
+  def merge(self, left, right):
+    if left == None:
+      return right
+    if right == None:
+      return left
+    
+    while right.left != None:
+      right = right.left
+    
+    right = self.splay(right)
+    right.left = left
+    right.update()
     return right
-  if right == None:
-    return left
-  while right.left != None:
-    right = right.left
-  right = splay(right)
-  right.left = left
-  update(right)
-  return right
-
   
-def insert(root, x):
-  parent = find(root, x)
-  new_node = Vertex(key=x, sum=x, left=None, right=None, parent=parent)
-  if parent.key > x:
-    parent.left = new_node
-    update(parent)
-  elif parent.key < x:
-    parent.right = new_node
-    update(parent)
-  else:
-    return splay(parent)
-  return splay(new_node)
+  def insert(self, root, key):
+    parent = self.binary_search(root, key)
+    new_node = Vertex(key=x, sum=x, left=None, right=None, parent=parent)
+    if parent.key > x:
+      parent.left = new_node
+      parent.update()
+    elif parent.key < x:
+      parent.right = new_node
+      parent.update()
+    else:
+      return self.splay(parent)
+    return self.splay(new_node)
 
+  def delete(self, root, key):
+    result = self.binary_search(root, key)
+    self.splay(result)
+    if result.key == key:
+      self.merge(result.left, result.right)
 
-def delete(root, x):
-  result = find(root, x)
-  splay(result)
-  if result.key == x:
-    merge(result.left, result.right)
+  @staticmethod
+  def split_left(node):
+    subtree_to_split = node.left
+    subtree_to_split.parent = None
+    node.sum -= subtree_to_split.sum
+    node.left = None
+    return subtree_to_split, node
 
+  @staticmethod
+  def split_right(node):
+    subtree_to_split = node.right
+    subtree_to_split.parent = None
+    node.sum -= subtree_to_split.sum
+    node.right = None
+    return subtree_to_split, node
 
-def split_left(root):
-  subtree_to_split = root.left
-  subtree_to_split.parent = None
-  root.sum -= subtree_to_split.sum
-  root.left = None
-  return subtree_to_split, root
+  def range_sum(self, root, fr, to):
+    fr_node = self.binary_search(root, fr)
+    if fr_node.key != fr:
+      return None
+    
+    root_to_split = self.splay(fr_node)
+    dumped_left, splayed_root = self.split_left(root_to_split)
 
-
-def split_right(root):
-  subtree_to_split = root.right
-  subtree_to_split.parent = None
-  root.sum -= subtree_to_split.sum
-  root.right = None
-  return subtree_to_split, root
-
-
-def range_sum(root, fr, to):
-  fr_node = binary_search(root, fr)
-  if fr_node.key != fr:
-    return None
-  splay(fr_node)
-  dumped_left, splayed_root = split_left(fr_node)
-
-  to_node = binary_search(splayed_root, to)
-  if to_node.key != to:
-    return None
-  splay(to_node)
-  dumped_right, splayed_root2 = split_right(to_node)
-  result = splayed_root2.sum
-  merged = merge(dumped_left, splayed_root2)
-  merge(merged, dumped_right)
-  return result
+    to_node = self.binary_search(splayed_root, to)
+    if to_node.key != to:
+      return None
+    
+    root_to_split = self.splay(to_node)
+    dumped_right, splayed_root2 = self.split_right(root_to_split)
+    result = splayed_root2.sum
+    merged = self.merge(dumped_left, splayed_root2)
+    self.merge(merged, dumped_right)
+    return result
 
 
 def test(i):
   n, *data = open(f'./tests/{i}').readlines()
   result = []
+  spt = SplayTree()
 
   for d in data:
     op, num = d.split()
@@ -191,16 +196,16 @@ def test(i):
     input_ = (int(num) + last_sum_result) % MODULO
 
     if op == '+':
-      insert(input_)
+      spt.insert(input_)
     if op == '-':
-      delete(input_)
+      spt.delete(input_)
     if op == '?':
-      result.append('Found' if find(input_) else 'Not Found')
+      result.append('Found' if spt.find(input_) else 'Not Found')
     if op == 's':
       fr, to = list(map(lambda x: int(x), num.split()))
       fr = (fr + last_sum_result) % MODULO
       to = (fr + last_sum_result) % MODULO
-      result.append(range_sum((fr , to)))
+      result.append(spt.range_sum((fr , to)))
 
   output = open(f'./tests/{i}.a').readlines()
   result = [str(r) for r in result]
