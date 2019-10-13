@@ -160,7 +160,7 @@ class SplayTree:
       return
     result = self.binary_search(self.root, key)
     splayed_result = self.splay(result)
-    if splayed.key == key:
+    if splayed_result.key == key:
       self.merge(splayed_result.left, splayed_result.right)
 
   @staticmethod
