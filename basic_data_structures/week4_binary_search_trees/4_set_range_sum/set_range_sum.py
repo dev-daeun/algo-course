@@ -79,6 +79,7 @@ class SplayTree:
       self.splay(node)
 
     self.root = node
+    self.root.update()
     return node
 
   @staticmethod
@@ -138,6 +139,7 @@ class SplayTree:
     new_node = Vertex(key=key, sum=key, left=None, right=None, parent=None)
     if not self.root:
       self.root = new_node
+      self.root.update()
       return
 
     parent = self.binary_search(self.root, key)
@@ -200,6 +202,7 @@ def test(i):
   last_sum_result = 0
 
   for d in data:
+    print(d)
     op, num = d.split()
     input_ = (int(num) + last_sum_result) % MODULO
     if op == '+':
