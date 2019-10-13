@@ -134,16 +134,16 @@ class SplayTree:
     return right
   
   def insert(self, key):
-    new_node = Vertex(key=x, sum=x, left=None, right=None, parent=None)
+    new_node = Vertex(key=key, sum=key, left=None, right=None, parent=None)
     if not self.root:
       self.root = new_node
       return
 
     parent = self.binary_search(self.root, key)
-    if parent.key > x:
+    if parent.key > key:
       parent.left = new_node
       parent.update()
-    elif parent.key < x:
+    elif parent.key < key:
       parent.right = new_node
       parent.update()
     else:
