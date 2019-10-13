@@ -211,19 +211,19 @@ def test(i):
   last_sum_result = 0
 
   for d in data:
-    op, num = d.split()
-    input_ = (int(num) + last_sum_result) % MODULO
+    op, *num = d.split()
+    if len(num) == 1:
+      num = (int(num[0]) + last_sum_result) % MODULO
+    else:
+      fr, to = list(map(lambda x: (int(x) + last_sum_result) % MODULO, num))
     if op == '+':
-      spt.insert(input_)
+      spt.insert(num)
     if op == '-':
-      spt.delete(input_)
+      spt.delete(num)
     if op == '?':
-      result.append('Found' if spt.find(input_) else 'Not found')
+      result.append('Found' if spt.find(num) else 'Not found')
     if op == 's':
-      fr, to = list(map(lambda x: int(x), num.split()))
-      fr = (fr + last_sum_result) % MODULO
-      to = (fr + last_sum_result) % MODULO
-      last_sum_result = sp.range_sum(fr, to)
+      last_sum_result = spt.range_sum(fr, to)
       result.append(last_sum_result)
 
   output = open(f'./tests/{i}.a').readlines()
@@ -233,7 +233,9 @@ def test(i):
 
 
 if __name__ == '__main__':
-  test(2)
+  for i in range(2, 7):
+    print(i)
+    test(i)
   # n = int(stdin.readline())
   # last_sum_result = 0
   # for i in range(n):
