@@ -36,6 +36,7 @@ class SplayTree:
 
     node.update()
     y.update()
+    return y
 
   @staticmethod
   def right_rotate(node):
@@ -47,40 +48,46 @@ class SplayTree:
     node.parent = y
 
     node.update()
-    y.update() 
+    y.update()
+    return y
 
   def splay(self, node):
     if node.is_root():
+      self.root = node
+      self.root.update()
       return node
-    
-    parent = node.parent
-    grandparent = parent.parent
-
-    if grandparent:
-      if grandparent.key > parent.key > node.key:  # left-left
-        self.right_rotate(parent)
-        self.right_rotate(grandparent)
-      if grandparent.key < parent.key < node.key:  # right-right
-        self.left_rotate(parent)
-        self.left_rotate(grandparent)
-      if grandparent.key < parent.key > node.key:  # right-left
-        self.right_rotate(parent)
-        self.left_rotate(grandparent)
-      if grandparent.key > parent.key < node.key: # left-right
-        self.left_rotate(parent)
-        self.right_rotate(grandparent)
     else:
-      if parent.key < node.key:
-        self.left_rotate(parent)
-      if parent.key > node.key:
-        self.right_rotate(parent)
+      parent = node.parent
+      grandparent = parent.parent
 
-    if not node.is_root():
-      self.splay(node)
+      if grandparent:
+        if grandparent.key > parent.key > node.key:  # left-left
+          splayed1 = self.right_rotate(parent)
+          splayed2 = self.right_rotate(splayed1.parent)
+        if grandparent.key < parent.key < node.key:  # right-right
+          splayed1 = self.left_rotate(parent)
+          splayed2 = self.left_rotate(splayed1.parent)
+        if grandparent.key < parent.key > node.key:  # right-left
+          splayed1 = self.right_rotate(parent)
+          splayed2 = self.left_rotate(splayed1.parent)
+        if grandparent.key > parent.key < node.key: # left-right
+          splayed1 = self.left_rotate(parent)
+          splayed2 = self.right_rotate(splayed1.parent)
 
-    self.root = node
-    self.root.update()
-    return node
+        if not splayed2.is_root():
+          self.splay(splayed2)
+        else:
+          return splayed2
+      else:
+        if parent.key < node.key:
+          splayed = self.left_rotate(parent)
+        if parent.key > node.key:
+          splayed = self.right_rotate(parent)
+
+        if not splayed.is_root():
+          self.splay(splayed)
+        else:
+          return splayed
 
   @staticmethod
   def binary_search(root, key):
@@ -204,7 +211,6 @@ def test(i):
   last_sum_result = 0
 
   for d in data:
-    print(d)
     op, num = d.split()
     input_ = (int(num) + last_sum_result) % MODULO
     if op == '+':
@@ -212,7 +218,7 @@ def test(i):
     if op == '-':
       spt.delete(input_)
     if op == '?':
-      result.append('Found' if spt.find(input_) else 'Not Found')
+      result.append('Found' if spt.find(input_) else 'Not found')
     if op == 's':
       fr, to = list(map(lambda x: int(x), num.split()))
       fr = (fr + last_sum_result) % MODULO
@@ -221,6 +227,7 @@ def test(i):
       result.append(last_sum_result)
 
   output = open(f'./tests/{i}.a').readlines()
+  output = [o.split('\n')[0] for o in output]
   result = [str(r) for r in result]
   assert result == output
 
