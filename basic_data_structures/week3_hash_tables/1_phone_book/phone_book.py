@@ -1,6 +1,13 @@
 # python3
 
 
+hash_table = list()
+TABLE_CARDINALITY = pow(10, 3)
+
+MAX_OF_NUMBER = 9_999_999
+MODULO = MAX_OF_NUMBER + 1  # should be bigger than max of number to product unique value for each number.
+
+
 class Query:
     def __init__(self, query):
         query = query.split()
@@ -8,6 +15,58 @@ class Query:
         self.number = int(query[1])
         if self.type == 'add':
             self.name = query[2]
+
+
+class Pair:
+    def __init__(self, number, name):
+        self.number = number
+        self.name = name
+
+
+def hash_number(number):
+    a = 34
+    b = 2
+    return ((a * number + b) % MODULO) % TABLE_CARDINALITY
+
+
+def add(name, number):
+    hashed_key = hash_number(number)
+    try:
+        chain = hash_table[hashed_key]
+    except IndexError:
+        chain = list()
+        chain.append(Pair(name=name, number=number))
+        hash_table[hashed_key] = chain
+    else:
+        for pair in chain:
+            if pair.number == number:
+                pair.name = name
+                return
+        chain.append(Pair(name=name, number=number))
+
+
+def find(number):
+    hashed_key = hash_number(number)
+    try:
+        chain = hash_table[hashed_key]
+    except IndexError:
+        return 'not found'
+
+    for pair in chain:
+        if pair.number == number:
+            return pair.name
+    return 'not found'
+
+
+def delete(number):
+    hashed_key = hash_number(number)
+    try:
+        chain = hash_table[hashed_key]
+    except IndexError:
+        return
+    for pair in chain:
+        if pair.number == number:
+            chain.remove(pair)
 
 
 def test1():
