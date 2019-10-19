@@ -114,7 +114,7 @@ def test2():
 
 def read_queries():
     n = int(input())
-    return [Query(input().split()) for i in range(n)]
+    return [Query(input()) for _ in range(n)]
 
 
 def write_responses(result):
@@ -134,6 +134,6 @@ def process_queries(queries):
 
 
 if __name__ == '__main__':
-    # write_responses(process_queries(read_queries()))
-    test1()
-    test2()
+    write_responses(process_queries(read_queries()))
+    # test1()
+    # test2()
