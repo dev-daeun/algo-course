@@ -32,7 +32,7 @@ class QueryProcessor:
         for t in chain:
             if t == text:
                 return
-        chain.append(text)
+        chain.insert(0, text)
 
     def delete(self, text):
         hashed_key = self._hash(text)
@@ -86,11 +86,13 @@ def test():
     output = open('./tests/1.a').readlines()
     output = [o.strip('\n') for o in output]
 
+    print(output)
+    print(qs.result)
     assert ' '.join(qs.result) == ' '.join(output)
 
 
 if __name__ == '__main__':
-    test()
-    # bucket_count = int(input())
-    # proc = QueryProcessor(bucket_count)
-    # proc.process_queries()
+    # test()
+    bucket_count = int(input())
+    proc = QueryProcessor(bucket_count)
+    proc.process_queries()
