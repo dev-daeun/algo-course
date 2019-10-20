@@ -7,23 +7,52 @@ class Query:
         if self.type == 'check':
             self.ind = int(query[1])
         else:
-            self.s = query[1]
+            self.text = query[1]
 
 
 class QueryProcessor:
     _multiplier = 263
     _prime = 1000000007
 
-    def __init__(self, bucket_count):
-        self.bucket_count = bucket_count
-        # store all strings in one list
-        self.elems = []
+    def __init__(self, bucket_amount):
+        self.bucket_amount = bucket_amount
+        self.table = [list() for _ in range(self.bucket_amount)]
 
-    def _hash_func(self, s):
+    def _hash(self, s):
         ans = 0
         for c in reversed(s):
             ans = (ans * self._multiplier + ord(c)) % self._prime
-        return ans % self.bucket_count
+        return ans % self.bucket_amount
+
+    def add(self, text):
+        hashed_key = self._hash(text)
+        chain = self.table[hashed_key]
+        for t in chain:
+            if t == text:
+                return
+        chain.append(text)
+
+    def delete(self, text):
+        hashed_key = self._hash(text)
+        chain = self.table[hashed_key]
+        for t in chain:
+            if t == text:
+                chain.remove(t)
+                return
+
+    def find(self, text):
+        hashed_key = self._hash(text)
+        chain = self.table[hashed_key]
+        for t in chain:
+            if t == text:
+                return 'yes'
+        return 'no'
+
+    def check(self, ind):
+        chain = self.table[ind]
+        if not chain:
+            return ''
+        return ' '.join(chain)
 
     def write_search_result(self, was_found):
         print('yes' if was_found else 'no')
