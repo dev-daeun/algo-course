@@ -3,6 +3,7 @@
 
 class Query:
     def __init__(self, query):
+        query = query.split()
         self.type = query[0]
         if self.type == 'check':
             self.ind = int(query[1])
@@ -52,12 +53,12 @@ class QueryProcessor:
     def check(self, ind):
         chain = self.table[ind]
         if not chain:
-            return ' '
+            return ''
         return ' '.join(chain)
 
     def process_query(self, query):
         if query.type == 'check':
-            self.result.append(self.check(query.text))
+            self.result.append(self.check(query.ind))
         if query.type == 'delete':
             self.delete(query.text)
         if query.type == 'find':
@@ -74,7 +75,22 @@ class QueryProcessor:
             print(r)
 
 
+def test():
+    m, n, *queries = open('./tests/1').readlines()
+    qs = QueryProcessor(int(m))
+
+    for i in range(int(n)):
+        query = Query(queries[i])
+        qs.process_query(query)
+
+    output = open('./tests/1.a').readlines()
+    output = [o.strip('\n') for o in output]
+
+    assert ' '.join(qs.result) == ' '.join(output)
+
+
 if __name__ == '__main__':
-    bucket_count = int(input())
-    proc = QueryProcessor(bucket_count)
-    proc.process_queries()
+    test()
+    # bucket_count = int(input())
+    # proc = QueryProcessor(bucket_count)
+    # proc.process_queries()
