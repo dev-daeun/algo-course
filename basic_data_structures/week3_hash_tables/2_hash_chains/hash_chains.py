@@ -17,6 +17,7 @@ class QueryProcessor:
     def __init__(self, bucket_amount):
         self.bucket_amount = bucket_amount
         self.table = [list() for _ in range(self.bucket_amount)]
+        self.result = []
 
     def _hash(self, s):
         ans = 0
@@ -51,41 +52,26 @@ class QueryProcessor:
     def check(self, ind):
         chain = self.table[ind]
         if not chain:
-            return ''
+            return ' '
         return ' '.join(chain)
 
-    def write_search_result(self, was_found):
-        print('yes' if was_found else 'no')
-
-    def write_chain(self, chain):
-        print(' '.join(chain))
-
-    def read_query(self):
-        return Query(input().split())
-
     def process_query(self, query):
-        if query.type == "check":
-            # use reverse order, because we append strings to the end
-            self.write_chain(cur for cur in reversed(self.elems)
-                             if self._hash_func(cur) == query.ind)
-        else:
-            try:
-                ind = self.elems.index(query.s)
-            except ValueError:
-                ind = -1
-            if query.type == 'find':
-                self.write_search_result(ind != -1)
-            elif query.type == 'add':
-                if ind == -1:
-                    self.elems.append(query.s)
-            else:
-                if ind != -1:
-                    self.elems.pop(ind)
+        if query.type == 'check':
+            self.result.append(self.check(query.text))
+        if query.type == 'delete':
+            self.delete(query.text)
+        if query.type == 'find':
+            self.result.append(self.find(query.text))
+        if query.type == 'add':
+            self.add(query.text)
 
     def process_queries(self):
         n = int(input())
-        for i in range(n):
-            self.process_query(self.read_query())
+        for _ in range(n):
+            q = Query(input())
+            self.process_query(q)
+        for r in self.result:
+            print(r)
 
 
 if __name__ == '__main__':
