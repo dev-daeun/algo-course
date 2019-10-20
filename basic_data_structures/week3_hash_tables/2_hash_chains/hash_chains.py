@@ -59,7 +59,7 @@ class QueryProcessor:
     def process_query(self, query):
         if query.type == 'check':
             self.result.append(self.check(query.ind))
-        if query.type == 'delete':
+        if query.type == 'del':
             self.delete(query.text)
         if query.type == 'find':
             self.result.append(self.find(query.text))
