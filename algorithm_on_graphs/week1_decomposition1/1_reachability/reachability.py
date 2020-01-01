@@ -10,7 +10,9 @@ def is_in_same_connected_component(start, end):
     visited[start] = True
     for adj_v in adjacent_list[start]:
         if not visited[adj_v]:
-            return is_in_same_connected_component(adj_v, end)
+            result = is_in_same_connected_component(adj_v, end)
+            if result:
+                return result
 
     return 0
 
@@ -56,3 +58,4 @@ end -= 1
 print(is_in_same_connected_component(start, end))
 # test_input(1)
 # test_input(2)
+# test_input(3)
