@@ -17,6 +17,23 @@ def is_in_same_connected_component(start, end):
     return 0
 
 
+n, m = list(map(int, sys.stdin.readline().strip('\n').split()))
+visited = [False for _ in range(n)]
+
+adjacent_list = [[] for _ in range(n)]
+for _ in range(m):
+    v1, v2 = list(map(int, sys.stdin.readline().strip('\n').split()))
+    adjacent_list[v1-1].append(v2 - 1)
+    adjacent_list[v2-1].append(v1 - 1)
+
+start, end = list(map(int, sys.stdin.readline().strip('\n').split()))
+start -= 1
+end -= 1
+
+print(is_in_same_connected_component(start, end))
+
+
+# ------------- test -------------
 def test_input(num):
     with open('tests/{}'.format(num)) as inputs:
         n, m = list(map(int, inputs.readline().strip('\n').split()))
@@ -41,21 +58,6 @@ def test_input(num):
 
     assert result == expected_result
 
-
-n, m = list(map(int, sys.stdin.readline().strip('\n').split()))
-visited = [False for _ in range(n)]
-
-adjacent_list = [[] for _ in range(n)]
-for _ in range(m):
-    v1, v2 = list(map(int, sys.stdin.readline().strip('\n').split()))
-    adjacent_list[v1-1].append(v2 - 1)
-    adjacent_list[v2-1].append(v1 - 1)
-
-start, end = list(map(int, sys.stdin.readline().strip('\n').split()))
-start -= 1
-end -= 1
-
-print(is_in_same_connected_component(start, end))
 # test_input(1)
 # test_input(2)
 # test_input(3)
