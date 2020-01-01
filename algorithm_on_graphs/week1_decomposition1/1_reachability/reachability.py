@@ -3,6 +3,7 @@
 import sys
 
 
+# Time complexity: O(|E|)
 def is_in_same_connected_component(start, end):
     if start == end:
         return 1
