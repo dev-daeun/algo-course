@@ -12,6 +12,14 @@ def dfs():
     return False
 
 
+'''
+어떤 정점에서 인접한 다른 정점을 방문하려고 할 때, pre_time은 갱신되었으나 post_time이 갱신되어있지 않으면
+두 정점은 사이클을 이루는 connected component에 있다.
+
+DAG(Directed Acyclic Graph)의 경우, 이미 방문했으면서 인접한 정점은 pre_time, post_time 둘 다 갱신되어 있음.
+'''
+
+
 def is_cyclic(v):
     pre_time[v] = time()
 
