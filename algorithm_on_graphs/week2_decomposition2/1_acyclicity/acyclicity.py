@@ -3,24 +3,29 @@ from time import time
 from sys import stdin
 
 
-def acyclic(adj):
-    return 0
-
-
 def dfs():
     for i in range(n):
         if not pre_time[i]:
-            explore(i)
+            result = is_cyclic(i)
+            if result:
+                return True
+    return False
 
 
-def explore(v):
+def is_cyclic(v):
     pre_time[v] = time()
 
     for adj_v in adjacent_list[v]:
-        if not pre_time[adj_v]:
-            explore(adj_v)
+        if pre_time[adj_v]:
+            if not post_time[adj_v]:
+                return True
+        else:
+            result = is_cyclic(adj_v)
+            if result:
+                return True
 
     post_time[v] = time()
+    return False
 
 
 if __name__ == '__main__':
@@ -33,5 +38,5 @@ if __name__ == '__main__':
         v1, v2 = list(map(int, stdin.readline().split(' ')))
         adjacent_list[v1-1].append(v2 - 1)
 
-    dfs()
+    print(1) if dfs() else print(0)
 
