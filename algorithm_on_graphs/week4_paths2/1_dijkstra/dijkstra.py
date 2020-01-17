@@ -14,6 +14,8 @@ def relax(v, adj_v, weight, vertices):
         vertices[adj_v].dist = vertices[v].dist + weight
 
 
+# Time complexity:
+#  |V| * (sorted() 시간복잡도 + |E|/|V|) = O(|V| * sorted() 시간복잡도 + |E|)
 def dijkstra(n, adjacent_list, start, end):
     vertices = [Vertex(i) for i in range(n)]
     vertices[start].dist = 0
@@ -22,6 +24,7 @@ def dijkstra(n, adjacent_list, start, end):
     for i in range(n):
         q.append(vertices[i])
 
+    # PriorityQueue는 Vertex 객체의 dist가 변경되어도 큐 내부에서 객체 간의 순서가 바뀌지 않아서 사용하기 부적절함.
     while q:
         q = sorted(q, key=lambda x: x.dist)
         v = q.pop(0)
