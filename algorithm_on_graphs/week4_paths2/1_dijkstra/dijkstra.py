@@ -35,7 +35,7 @@ def dijkstra(n, adjacent_list, start, end):
 
 if __name__ == '__main__':
     n, m = list(map(int, stdin.readline().split()))
-    adjacent_list = [list() for _ in range(m)]
+    adjacent_list = [list() for _ in range(n)]
 
     for _ in range(m):
         v1, v2, weight = list(map(int, stdin.readline().split()))
