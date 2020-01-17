@@ -43,4 +43,8 @@ if __name__ == '__main__':
 
     start, end = list(map(int, stdin.readline().split()))
 
-    print(dijkstra(n, adjacent_list, start - 1, end - 1))
+    result = dijkstra(n, adjacent_list, start - 1, end - 1)
+    if result == maxsize:
+        print(-1)
+    else:
+        print(result)
