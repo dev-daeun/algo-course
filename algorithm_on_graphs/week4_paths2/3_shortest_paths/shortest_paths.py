@@ -14,15 +14,15 @@ def bellman_ford(n, start, adjacent_list):
     dist = [maxsize for _ in range(n)]
     dist[start] = 0
 
-    for _ in range(n-1):  # O(|V|)
-        for edges in adjacent_list:
-            for adj_v, w in edges:  # O(|E|)
-                relax(adjacent_list.index(edges), adj_v, w, dist)
+    for _ in range(n-1):
+        for v in range(n):
+            for adj_v, w in adjacent_list[v]:
+                relax(v, adj_v, w, dist)
 
     q = list()
-    for edges in adjacent_list:
-        for adj_v, w in edges:
-            if relax(adjacent_list.index(edges), adj_v, w, dist):
+    for v in range(n):
+        for adj_v, w in adjacent_list[v]:
+            if relax(v, adj_v, w, dist):
                 q.append(adj_v)
 
     visited = [False for _ in range(n)]
