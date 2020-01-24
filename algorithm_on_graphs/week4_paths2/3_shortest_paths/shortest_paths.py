@@ -37,14 +37,35 @@ def bellman_ford(n, start, adjacent_list):
     return dist
 
 
-if __name__ == '__main__':
-    n, m = list(map(int, stdin.readline().split()))
-    adjacent_list = [list() for _ in range(n)]
-    for _ in range(m):
-        v1, v2, w = list(map(int, stdin.readline().split()))
-        adjacent_list[v1-1].append((v2 - 1, w))
+def test():
+    for i in range(1, 3):
+        with open('./tests/{}'.format(i)) as inputs:
+            n, m = list(map(int, inputs.readline().split()))
+            adjacent_list = [list() for _ in range(n)]
 
-    start = int(stdin.readline().strip('\n'))
-    dist = bellman_ford(n, start - 1, adjacent_list)
-    for d in dist:
-        print('*' if d == maxsize else d)
+            for _ in range(m):
+                v1, v2, w = list(map(int, inputs.readline().split()))
+                adjacent_list[v1-1].append((v2 - 1, w))
+
+            start = int(inputs.readline().strip('\n'))
+            actual_result = bellman_ford(n, start - 1, adjacent_list)
+            print(actual_result)
+
+        with open('./tests/{}.a'.format(i)) as output:
+            expected_result = [e.strip('\n') for e in output.readlines()]
+            for i in range(n):
+                assert str(actual_result[i]) == expected_result[i]
+
+
+if __name__ == '__main__':
+    # n, m = list(map(int, stdin.readline().split()))
+    # adjacent_list = [list() for _ in range(n)]
+    # for _ in range(m):
+    #     v1, v2, w = list(map(int, stdin.readline().split()))
+    #     adjacent_list[v1-1].append((v2 - 1, w))
+    #
+    # start = int(stdin.readline().strip('\n'))
+    # dist = bellman_ford(n, start - 1, adjacent_list)
+    # for d in dist:
+    #     print('*' if d == maxsize else d)
+    test()
