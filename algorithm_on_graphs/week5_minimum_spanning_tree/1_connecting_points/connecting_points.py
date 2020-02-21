@@ -31,12 +31,12 @@ class DisjointSet:
 
         if self.ranks[v1_root] == self.ranks[v2_root]:
             self.ranks[v1_root] += 1
-            return self.merge(dst=v1, src=v2)
+            return self.merge(dst=v1_root, src=v2_root)
 
         if self.ranks[v1_root] > self.ranks[v2_root]:
-            return self.merge(dst=v1, src=v2)
+            return self.merge(dst=v1_root, src=v2_root)
 
-        return self.merge(dst=v2, src=v1)
+        return self.merge(dst=v2_root, src=v1_root)
 
 
 def distance(city1, city2):
