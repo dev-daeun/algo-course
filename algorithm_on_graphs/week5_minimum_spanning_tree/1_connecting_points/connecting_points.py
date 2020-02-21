@@ -22,8 +22,21 @@ class DisjointSet:
         self.parents[e] = p
         return p
 
+    def merge(self, dst, src):
+        self.parents[src] = dst
+
     def union(self, v1, v2):
-        pass
+        v1_root = self.find(v1)
+        v2_root = self.find(v2)
+
+        if self.ranks[v1_root] == self.ranks[v2_root]:
+            self.ranks[v1_root] += 1
+            return self.merge(dst=v1, src=v2)
+
+        if self.ranks[v1_root] > self.ranks[v2_root]:
+            return self.merge(dst=v1, src=v2)
+
+        return self.merge(dst=v2, src=v1)
 
 
 def distance(city1, city2):
@@ -58,4 +71,3 @@ if __name__ == '__main__':
         vertexes.append(v)
 
     print("{0:.9f}".format(kruskal(number_of_v, vertexes, dist)))
-
